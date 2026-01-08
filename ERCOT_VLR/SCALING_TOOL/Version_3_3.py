@@ -19,17 +19,58 @@ from streamlit_toggle import st_toggle_switch
 # Set page config
 st.set_page_config(page_title="EPDC Automation", layout="wide")
 
+# # Load environment variables
+# load_dotenv()
+
+# # Database connection parameters from .env
+# db_params = {
+#     'dbname': os.getenv("DB_NAME", "epdauto"),
+#     'user': os.getenv("DB_USER", "postgres"),
+#     'password': os.getenv("DB_PASSWORD", "postgres"),
+#     'host': os.getenv("DB_HOST", "localhost"),
+#     'port': os.getenv("DB_PORT", "5432")
+# }
 # Load environment variables
 load_dotenv()
 
-# Database connection parameters from .env
-db_params = {
-    'dbname': os.getenv("DB_NAME", "epdauto"),
-    'user': os.getenv("DB_USER", "postgres"),
-    'password': os.getenv("DB_PASSWORD", "postgres"),
-    'host': os.getenv("DB_HOST", "localhost"),
-    'port': os.getenv("DB_PORT", "5432")
-}
+# Database connection parameters - supports both .env (local) and Streamlit Cloud secrets
+try:
+    # Priority 1: Streamlit Cloud secrets (for production deployment)
+    if hasattr(st, 'secrets') and 'DB_NAME' in st.secrets:
+        db_params = {
+            'dbname': st.secrets['DB_NAME'],
+            'user': st.secrets['DB_USER'],
+            'password': st.secrets['DB_PASSWORD'],
+            'host': st.secrets['DB_HOST'],
+            'port': st.secrets['DB_PORT']
+        }
+    # Priority 2: Environment variables from .env file (for local development)
+    else:
+        db_params = {
+            'dbname': os.getenv("DB_NAME", "epdauto"),
+            'user': os.getenv("DB_USER", "postgres"),
+            'password': os.getenv("DB_PASSWORD", "postgres"),
+            'host': os.getenv("DB_HOST", "localhost"),
+            'port': os.getenv("DB_PORT", "5432")
+        }
+    
+    # Validate that all required parameters are present
+    if not all([db_params['dbname'], db_params['user'], db_params['password'], db_params['host'], db_params['port']]):
+        st.error("❌ Database credentials are missing! Please check your environment variables or Streamlit Cloud secrets.")
+        st.stop()
+    
+    # Create database engine with connection pooling and timeout
+    engine = create_engine(
+        f"postgresql+psycopg2://{db_params['user']}:{db_params['password']}@{db_params['host']}:{db_params['port']}/{db_params['dbname']}",
+        pool_pre_ping=True,  # Verify connections before using
+        pool_recycle=3600,   # Recycle connections after 1 hour
+        connect_args={"connect_timeout": 10}  # 10 second connection timeout
+    )
+    
+except Exception as e:
+    st.error(f"❌ Error configuring database connection: {str(e)}")
+    st.info("💡 Make sure your RDS database credentials are set in Streamlit Cloud secrets or .env file.")
+    st.stop()
 
 # Create database engine
 engine = create_engine(f"postgresql+psycopg2://{db_params['user']}:{db_params['password']}@{db_params['host']}:{db_params['port']}/{db_params['dbname']}")
