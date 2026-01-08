@@ -1,10 +1,9 @@
 requests
 pandas
-psycopg2
+# psycopg2
 psycopg2-binary
 sqlalchemy
 numpy
-Python-IO
 python-dotenv
 dotenv
 streamlit
