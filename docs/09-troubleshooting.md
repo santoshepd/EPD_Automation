@@ -274,14 +274,39 @@ This guide helps you resolve common issues when working with the EPD Automation 
 
 ### Issue: Database connection fails in production
 
-**Error**: `Unable to connect to RDS`
+**Error**: `Unable to connect to RDS` or `Connection timed out`
 
 **Solutions**:
-1. Verify RDS security group allows Streamlit Cloud IPs
-2. Check RDS is publicly accessible (if needed)
-3. Verify RDS endpoint is correct
-4. Test connection from local machine
-5. Check VPC peering configuration (if used)
+1. **Enable Public Accessibility**:
+   - AWS Console → RDS → Your database → Modify
+   - Connectivity → Public access → **Publicly accessible: Yes**
+   - Apply changes immediately
+
+2. **Update Security Group**:
+   - EC2 → Security Groups → Find RDS security group
+   - Edit inbound rules → Add rule:
+     - Type: PostgreSQL
+     - Port: 5432
+     - Source: `0.0.0.0/0` (for testing) or specific IPs
+
+3. **Verify Network ACLs**:
+   - VPC → Network ACLs → Check inbound/outbound rules
+   - Ensure port 5432 is allowed
+
+4. **Verify RDS Endpoint**:
+   - Use full endpoint: `your-db.xxxxx.region.rds.amazonaws.com`
+   - Check port is 5432
+
+5. **Test Connection Locally First**:
+   ```bash
+   psql -h your-rds-endpoint -U username -d database
+   ```
+
+6. **Check Streamlit Cloud Secrets**:
+   - Verify `DB_HOST` is the full RDS endpoint
+   - No quotes or extra spaces in TOML format
+
+**See [RDS Connection Fix Guide](RDS_CONNECTION_FIX.md) for detailed steps.**
 
 ## Performance Issues
 

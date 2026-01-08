@@ -14,6 +14,7 @@ Welcome to the EPD (Energy Price Data) Automation project documentation. This co
 8. [Deployment Guide](08-deployment.md) - Deploying to Streamlit Cloud
 9. [Troubleshooting](09-troubleshooting.md) - Common issues and solutions
 10. [Development Guide](10-development.md) - Best practices and contribution guidelines
+11. [RDS Connection Fix](RDS_CONNECTION_FIX.md) - **Quick fix for RDS connection timeouts**
 
 ## 🚀 Quick Start
 
