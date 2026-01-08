@@ -1,0 +1,46 @@
+# #!/usr/bin/env python
+# import subprocess
+
+# scripts = [
+#     "DA_RT_LMPS.py",                          # Real-time & Day-ahead LMPs
+#     "DA_RT_LOAD.py",                          # Real-time & Day-ahead Loads
+#     "Price_Variance.py",                      # VLR Price Variance
+#     "Load_Variance.py",                       # Load Variance
+#     "Total_Hedge_Cost_WO_Imbalance.py",       # Hedge Cost without Imbalance
+#     "Total_Cost_of_Imbalance.py",             # Cost of Imbalance
+#     "Total_Hedge_Cost_W_Imbalance.py",        # Hedge Cost with Imbalance
+#     "Total_Price_W_Imbalance.py",             # Total Price with Imbalance
+#     "Utilized_Cost.py",                       # Utilized Cost = TPwI - DALMP
+#     "Hourly_VLR.py",                          # Hourly Cost %
+#     "ISONE_VLR.py",                           # Final VLR
+# ]
+
+# for script in scripts:
+#     print(f"🚀 Running {script}...")
+#     subprocess.run(["/home/ubuntu/workspace/hp/envs/TLE/bin/python3",  f"./{script}"], check=True)
+
+# print("✅ All ISONE scripts executed successfully!")
+#!/usr/bin/env python
+import subprocess
+
+# ✅ Only run scripts starting from Price_Variance.py till ISONE_VLR.py
+scripts = [
+    "Price_Variance.py",                      # VLR Price Variance
+    "Load_Variance.py",                       # Load Variance
+    "Total_Hedge_Cost_WO_Imbalance.py",       # Hedge Cost without Imbalance
+    "Total_Cost_of_Imbalance.py",             # Cost of Imbalance
+    "Total_Hedge_Cost_W_Imbalance.py",        # Hedge Cost with Imbalance
+    "Total_Price_W_Imbalance.py",             # Total Price with Imbalance
+    "Utilized_Cost.py",                       # Utilized Cost = TPwI - DALMP
+    "Hourly_VLR.py",                          # Hourly Cost %
+    "ISONE_VLR.py",                           # Final VLR
+]
+
+for script in scripts:
+    print(f"🚀 Running {script}...")
+    subprocess.run(
+        ["/home/ubuntu/workspace/hp/envs/TLE/bin/python3", f"./{script}"], 
+        check=True
+    )
+
+print("✅ All VLR-related scripts executed successfully!")

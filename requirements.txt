@@ -1,0 +1,13 @@
+requests
+pandas
+psycopg2
+sqlalchemy
+numpy
+Python-IO
+dotenv
+streamlit
+XlsxWriter
+openpyxl
+streamlit-autorefresh
+streamlit-toggle-switch
+altair
